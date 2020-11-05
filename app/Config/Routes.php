@@ -33,6 +33,7 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'Home::index');
 $routes->get('todo', 'Todo::index');
 $routes->get('login', 'Login::index');
+$routes->get('register', 'Login::register');
 $routes->get('/tuoteryhma/tallenna', 'Admin::tallenna');
 
 
