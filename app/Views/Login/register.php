@@ -45,5 +45,5 @@
         placeholder="Enter password again"
         maxlength="30">
         </div>
-        <button class="btn btn-prinary">Submit</button>
+        <button class="btn btn-primary">Submit</button>
 </form>

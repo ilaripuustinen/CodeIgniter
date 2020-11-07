@@ -20,6 +20,6 @@
         placeholder="Enter password"
         maxlength="30">
     </div>
-    <button class="btn btn-prinary">Login</button>
+    <button class="btn btn-primary">Login</button>
     <?= anchor('login/register','Register') ?>
 </form>

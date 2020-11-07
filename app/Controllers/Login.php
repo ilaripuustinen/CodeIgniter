@@ -1,9 +1,15 @@
 <?php namespace App\Controllers;
 
 const REGISTER_TITLE = 'Todo - Register';
+const LOGIN_TITLE = 'Todo - Login';
 use App\Models\LoginModel;
 
 class Login extends BaseController {
+
+    public function __construct(){
+        $session = \Config\Services::session();
+        $session->start();
+    }
 
     public function index() {
 
@@ -40,6 +46,32 @@ class Login extends BaseController {
                 'lastname' => $this->request->getVar('lastname')
             ]);
             return redirect('login');
+        }
+    }
+
+    public function check() {
+        $model = new LoginModel();
+
+        if (!$this->validate([
+            'user' => 'required|min_length[8]|max_length[30]',
+            'password' => 'required|min_length[8]|max_length[30]',
+        ])){
+            echo view('templates/header', ['title' => LOGIN_TITLE]);
+            echo view('login/login');
+            echo view('templates/footer');
+        }
+        else {
+            $user = $model->check( //Use model to check if user exists
+                $this->request->getVar('user'),
+                $this->request->getVar('password')
+            );
+            if ($user) { // If there is user, store into session and return
+                $_SESSION['user'] = $user;
+                return redirect('todo');
+            }
+            else { // User is null, redirect to login page.
+                return redirect('login');
+            }
         }
     }
 }

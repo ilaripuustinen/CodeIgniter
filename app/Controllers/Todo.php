@@ -4,7 +4,20 @@ use App\Models\TodoModel;
 
 class Todo extends BaseController {
 
-    public function index() {
+    /**
+     * Constructor starts session.
+     */
+
+     public function __construct() {
+        $session = \Config\Services::session();
+        $session->start();
+        }
+
+          public function index() {        
+        if (!isset($_SESSION['user'])) {
+             return redirect('login');
+         }    
+         
         $model = new TodoModel();
         $data['title'] = 'Todo';
         $data['todos'] = $model->getTodos();
@@ -23,11 +36,27 @@ class Todo extends BaseController {
             echo view('templates/footer');
         }
         else {
+            $user = $_SESSION['user'];
             $model->save([
                 'title' => $this->request->getVar('title'),
-                'description' => $this->request->getVar('description')
+                'description' => $this->request->getVar('description'),
+                'user_id' => $user->id
             ]);
             return redirect('todo');
         }
-    } 
+    }
+    public function delete($id) {
+        //Check if provided id is numeric (to prevent SQL injection).
+        if (!is_numeric($id)) {
+            throw new \Exception('Provided id is not an number. ');
+        }
+        // Only logged user is allowed to delete.
+        if (!isset($_SESSION['user'])) {
+            return redirect('login');
+        }
+        $model = new TodoModel(); // Create object of TodoModel.
+
+        $model->remove($id);
+        return redirect('todo');
+    }
 }
